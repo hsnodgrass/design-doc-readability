@@ -1,0 +1,897 @@
+{
+  "_comment": "Pattern catalog for scan.py. Regexes are Python syntax and match case-insensitively unless the entry sets \"case\": true. Weights scale how much one hit counts. Tune thresholds against references/calibration.md.",
+  "categories": {
+    "vocabulary": [
+      {
+        "label": "delve",
+        "re": "\\bdelv(e|es|ed|ing)\\b",
+        "w": 3
+      },
+      {
+        "label": "tapestry",
+        "re": "\\btapestr(y|ies)\\b",
+        "w": 3
+      },
+      {
+        "label": "testament to",
+        "re": "\\b(a|is a|stands as a) testament\\b",
+        "w": 3
+      },
+      {
+        "label": "landscape (figurative)",
+        "re": "\\b(the|today'?s|this|evolving|ever-changing|security|threat|technical|competitive|current) landscape\\b",
+        "w": 2
+      },
+      {
+        "label": "realm",
+        "re": "\\brealms?\\b",
+        "w": 1
+      },
+      {
+        "label": "leverage",
+        "re": "\\bleverag(e|es|ed|ing)\\b",
+        "w": 2
+      },
+      {
+        "label": "seamless",
+        "re": "\\bseamless(ly)?\\b",
+        "w": 2
+      },
+      {
+        "label": "comprehensive",
+        "re": "\\bcomprehensive(ly)?\\b",
+        "w": 1
+      },
+      {
+        "label": "crucial",
+        "re": "\\bcrucial(ly)?\\b",
+        "w": 2
+      },
+      {
+        "label": "pivotal",
+        "re": "\\bpivotal\\b",
+        "w": 3
+      },
+      {
+        "label": "paramount",
+        "re": "\\bparamount\\b",
+        "w": 3
+      },
+      {
+        "label": "holistic",
+        "re": "\\bholistic(ally)?\\b",
+        "w": 3
+      },
+      {
+        "label": "streamline",
+        "re": "\\bstreamlin(e|es|ed|ing)\\b",
+        "w": 2
+      },
+      {
+        "label": "empower",
+        "re": "\\bempower(s|ed|ing|ment)?\\b",
+        "w": 3
+      },
+      {
+        "label": "elevate",
+        "re": "\\belevat(e|es|ed|ing)\\b",
+        "w": 2
+      },
+      {
+        "label": "unlock",
+        "re": "\\bunlock(s|ed|ing)?\\b(?!\\s+(the|a)\\s+(mutex|lock|file|account|door))",
+        "w": 1
+      },
+      {
+        "label": "unleash",
+        "re": "\\bunleash(es|ed|ing)?\\b",
+        "w": 3
+      },
+      {
+        "label": "harness (verb)",
+        "re": "\\bharness(es|ed|ing)? (the|its|their|our)\\b",
+        "w": 2
+      },
+      {
+        "label": "foster",
+        "re": "\\bfoster(s|ed|ing)?\\b",
+        "w": 2
+      },
+      {
+        "label": "bolster",
+        "re": "\\bbolster(s|ed|ing)?\\b",
+        "w": 3
+      },
+      {
+        "label": "underscore",
+        "re": "\\bunderscor(e|es|ed|ing) (the|that|how|why|its|our)\\b",
+        "w": 3
+      },
+      {
+        "label": "showcase",
+        "re": "\\bshowcas(e|es|ed|ing)\\b",
+        "w": 2
+      },
+      {
+        "label": "navigate (figurative)",
+        "re": "\\bnavigat(e|es|ed|ing) (the )?(complex|complexit|challeng|nuanc|trade-?offs|landscape|uncertain)",
+        "w": 3
+      },
+      {
+        "label": "intricate",
+        "re": "\\bintricac(y|ies)|\\bintricate\\b",
+        "w": 2
+      },
+      {
+        "label": "nuanced",
+        "re": "\\bnuanc(e|es|ed)\\b",
+        "w": 2
+      },
+      {
+        "label": "multifaceted",
+        "re": "\\bmulti-?faceted\\b",
+        "w": 3
+      },
+      {
+        "label": "myriad / plethora",
+        "re": "\\b(myriad|plethora)\\b",
+        "w": 3
+      },
+      {
+        "label": "cutting-edge / state-of-the-art",
+        "re": "\\b(cutting-edge|state-of-the-art|best-in-class|world-class|next-generation|next-gen)\\b",
+        "w": 3
+      },
+      {
+        "label": "game-changer",
+        "re": "\\bgame-?chang(er|ing)\\b",
+        "w": 3
+      },
+      {
+        "label": "bespoke",
+        "re": "\\bbespoke\\b",
+        "w": 2
+      },
+      {
+        "label": "synergy",
+        "re": "\\bsynerg(y|ies|istic)\\b",
+        "w": 3
+      },
+      {
+        "label": "paradigm",
+        "re": "\\bparadigm(s|atic)?\\b",
+        "w": 2
+      },
+      {
+        "label": "meticulous",
+        "re": "\\bmeticulous(ly)?\\b",
+        "w": 3
+      },
+      {
+        "label": "effortless",
+        "re": "\\beffortless(ly)?\\b",
+        "w": 3
+      },
+      {
+        "label": "boasts",
+        "re": "\\bboast(s|ing)\\b",
+        "w": 3
+      },
+      {
+        "label": "vibrant",
+        "re": "\\bvibrant\\b",
+        "w": 3
+      },
+      {
+        "label": "ever-evolving",
+        "re": "\\bever-(evolving|changing|growing|increasing|present)\\b",
+        "w": 3
+      },
+      {
+        "label": "transformative",
+        "re": "\\b(transformative|revolutioni[sz](e|es|ed|ing)|supercharg(e|es|ed|ing))\\b",
+        "w": 3
+      },
+      {
+        "label": "future-proof / battle-tested",
+        "re": "\\b(future-?proof(ing)?|battle-tested)\\b",
+        "w": 2
+      },
+      {
+        "label": "plays a key role",
+        "re": "\\bplays? an? (key|crucial|vital|pivotal|critical|central|important) role\\b",
+        "w": 3
+      },
+      {
+        "label": "serves as / stands as",
+        "re": "\\b(serves|stands) as (a|an|the)\\b",
+        "w": 1
+      },
+      {
+        "label": "a wide range / variety of",
+        "re": "\\ba (wide|broad|diverse) (range|array|variety|spectrum) of\\b",
+        "w": 2
+      },
+      {
+        "label": "when it comes to",
+        "re": "\\bwhen it comes to\\b",
+        "w": 2
+      },
+      {
+        "label": "robust",
+        "re": "\\brobust(ly)?\\b",
+        "w": 1
+      },
+      {
+        "label": "key (adjective)",
+        "re": "\\b(a|the|two|three|several) key (insight|benefit|advantage|feature|challenge|component|consideration|aspect|principle|differentiator|takeaway)s?\\b",
+        "w": 2
+      },
+      {
+        "label": "deep dive",
+        "re": "\\bdeep[- ]dive\\b",
+        "w": 2
+      },
+      {
+        "label": "first-class citizen",
+        "re": "\\bfirst-class (citizen|support|experience)\\b",
+        "w": 1
+      },
+      {
+        "label": "north star",
+        "re": "\\bnorth star\\b",
+        "w": 2
+      },
+      {
+        "label": "guardrails (figurative)",
+        "re": "\\bguardrails?\\b",
+        "w": 1
+      },
+      {
+        "label": "load-bearing",
+        "re": "\\bload-bearing\\b",
+        "w": 2
+      },
+      {
+        "label": "surface (verb)",
+        "re": "\\bsurfac(es|ed|ing) (the|a|an|any|this|that|it|them|errors?|issues?)\\b",
+        "w": 1
+      },
+      {
+        "label": "lean into / double down",
+        "re": "\\b(lean(s|ed|ing)? into|doubl(e|es|ed|ing) down)\\b",
+        "w": 2
+      },
+      {
+        "label": "quietly",
+        "re": "\\bquietly\\b",
+        "w": 2
+      },
+      {
+        "label": "genuinely / honestly",
+        "re": "\\b(genuine(ly)?|honest(ly)?)\\b",
+        "w": 1
+      },
+      {
+        "label": "precisely / exactly",
+        "re": "\\b(precisely|exactly)\\b",
+        "w": 0.5
+      },
+      {
+        "label": "deliberately / on purpose",
+        "re": "\\b(deliberately|on purpose)\\b",
+        "w": 1
+      },
+      {
+        "label": "by construction",
+        "re": "\\bby construction\\b",
+        "w": 1
+      },
+      {
+        "label": "the shape of (figurative)",
+        "re": "\\b(the|its|same|right|a) shape (of|is|as)\\b",
+        "w": 2
+      },
+      {
+        "label": "which is why",
+        "re": "\\b(which|this|that) is (exactly |precisely )?why\\b",
+        "w": 1
+      },
+      {
+        "label": "boils down to",
+        "re": "\\bboils? down to\\b",
+        "w": 2
+      },
+      {
+        "label": "heavy lifting",
+        "re": "\\b(does|do|doing) the heavy lifting\\b",
+        "w": 2
+      },
+      {
+        "label": "earns its place",
+        "re": "\\bearns? (its|their) (place|keep)\\b",
+        "w": 2
+      },
+      {
+        "label": "out of the box",
+        "re": "\\bout of the box\\b",
+        "w": 1
+      },
+      {
+        "label": "inflated word (USU)",
+        "re": "\\b(utili[sz](e|es|ed|ing|ation)|facilitat(e|es|ed|ing)|commenc(e|es|ed|ing)|endeavou?r(s|ed|ing)?|ascertain(s|ed|ing)?|aforementioned|henceforth|heretofore)\\b",
+        "w": 1
+      },
+      {
+        "label": "cliché (USU)",
+        "re": "\\b(easier said than done|low-hanging fruit|move the needle|silver bullet|boil the ocean|perfect storm|best of both worlds|tip of the iceberg|think outside the box|hit the ground running|elephant in the room|double-edged sword|level playing field|circle back|secret sauce|rocket science|no-brainer|table stakes|bells and whistles)\\b",
+        "w": 2
+      }
+    ],
+    "filler": [
+      {
+        "label": "it's worth noting",
+        "re": "\\bit(?:'| i)s worth (noting|mentioning|pointing out|calling out|emphasi[sz]ing)\\b",
+        "w": 3
+      },
+      {
+        "label": "it's important to note",
+        "re": "\\bit(?:'| i)s (important|crucial|essential|critical|key) to (note|remember|understand|recogni[sz]e|emphasi[sz]e)\\b",
+        "w": 3
+      },
+      {
+        "label": "sentence-initial intensifier",
+        "re": "(^|[.!?]\\s+|^\\s*[-*]\\s+)(Importantly|Notably|Crucially|Essentially|Fundamentally|Ultimately|Critically|Interestingly|Simply put|Put simply)\\s*,",
+        "w": 2,
+        "case": true
+      },
+      {
+        "label": "sentence-initial connective",
+        "re": "(^|[.!?]\\s+|^\\s*[-*]\\s+)(Additionally|Furthermore|Moreover|Overall)\\s*,",
+        "w": 0.5,
+        "case": true
+      },
+      {
+        "label": "in summary / in conclusion",
+        "re": "\\b(in summary|in conclusion|to summari[sz]e|to sum up|in short|all in all)\\b",
+        "w": 2
+      },
+      {
+        "label": "let's dive in / unpack",
+        "re": "\\blet'?s (dive|explore|unpack|break (it|this|that|things) down|get started|jump)\\b",
+        "w": 3
+      },
+      {
+        "label": "let's look (tutorial voice)",
+        "re": "\\blet'?s (take a|look|walk|start|begin|examine|consider)\\b",
+        "w": 1
+      },
+      {
+        "label": "dive into",
+        "re": "\\bdiv(e|es|ing) (into|deeper|in)\\b",
+        "w": 2
+      },
+      {
+        "label": "at its core / at the heart",
+        "re": "\\b(at its core|at the heart of|at the end of the day|when all is said and done)\\b",
+        "w": 3
+      },
+      {
+        "label": "in today's ...",
+        "re": "\\bin today'?s\\b",
+        "w": 3
+      },
+      {
+        "label": "here's what/how/why",
+        "re": "\\bhere'?s (what|how|why|the|where|a)\\b",
+        "w": 1
+      },
+      {
+        "label": "the key insight",
+        "re": "\\bthe (key|core|central|big|main) (insight|idea|takeaway|point|realization|observation) (is|here)\\b",
+        "w": 3
+      },
+      {
+        "label": "this is where X comes in",
+        "re": "\\b(this|that) is where [^.]{1,40} comes? in\\b",
+        "w": 3
+      },
+      {
+        "label": "think of it as",
+        "re": "\\bthink of (it|this|them|that) as\\b",
+        "w": 2
+      },
+      {
+        "label": "simply put / put simply",
+        "re": "\\b(simply put|put simply|in simple terms|in plain terms|to put it simply)\\b",
+        "w": 3
+      },
+      {
+        "label": "that said / with that in mind",
+        "re": "\\b(that said|that being said|with that in mind|with this in mind|having said that)\\b",
+        "w": 1
+      },
+      {
+        "label": "meta: this doc aims to / explores",
+        "re": "\\b(this|the) (document|doc|section|proposal|rfc|design) (aims to|seeks to|explores|will explore|will walk|walks through|dives|takes a look)\\b",
+        "w": 2
+      },
+      {
+        "label": "we'll / we will explore",
+        "re": "\\bwe('ll| will) (explore|dive|walk through|take a look|unpack)\\b",
+        "w": 2
+      },
+      {
+        "label": "stakeholder boilerplate",
+        "re": "\\b(all|key|relevant|various) stakeholders\\b",
+        "w": 1
+      },
+      {
+        "label": "moving forward / going forward",
+        "re": "\\b(moving|going) forward\\b",
+        "w": 1
+      },
+      {
+        "label": "the bottom line",
+        "re": "\\b(the bottom line|bottom line:)\\b",
+        "w": 2
+      },
+      {
+        "label": "in other words",
+        "re": "\\bin other words\\b",
+        "w": 0.5
+      },
+      {
+        "label": "redundancy (USU)",
+        "re": "\\b(true fact|absolutely (free|essential|necessary|certain|critical)|summari[sz]e briefly|(fuse|combine|join|merge|connect) together|exactly (the same|identical)|end result|past history|future plans|each and every|close proximity|basic fundamentals|advance planning|added bonus|final outcome|unexpected surprise|new innovation|still remains|repeat again|revert back|completely (eliminate|finish|destroy))\\b",
+        "w": 1
+      },
+      {
+        "label": "wordy phrase (USU)",
+        "re": "\\b(due to the fact that|at this point in time|in the event that|for the purpose of|in order to|prior to|subsequent to|with regard to|in terms of|is able to|has the ability to|a large number of)\\b",
+        "w": 0.25
+      }
+    ],
+    "rhetoric": [
+      {
+        "label": "not just X, but Y",
+        "re": "\\bnot (just|only|merely|simply) [^.;:!?]{1,80}?[,;—–]?\\s*(but|it'?s|it is|they'?re|they are)\\b",
+        "w": 3
+      },
+      {
+        "label": "isn't X; it's Y",
+        "re": "\\b(isn'?t|is not|aren'?t|are not|wasn'?t|was not)\\s+[^.;!?]{1,60}?[;,—–:]\\s*(it'?s|it is|they'?re|they are|this is|that'?s)\\b",
+        "w": 3
+      },
+      {
+        "label": "It's not X. It's Y.",
+        "re": "\\b(it|this|that)'?s not [^.!?]{1,60}[.!?]\\s+(it|this|that)'?s\\b",
+        "w": 3
+      },
+      {
+        "label": "not because X, but because Y",
+        "re": "\\bnot because [^.;!?]{1,80}?,?\\s*but because\\b",
+        "w": 3
+      },
+      {
+        "label": "less about X, more about Y",
+        "re": "\\bless about\\b[^.]{1,60}\\bmore about\\b",
+        "w": 3
+      },
+      {
+        "label": "reveal colon/question",
+        "re": "\\b(the|here'?s the) (result|answer|catch|kicker|upshot|short answer|good news|bad news|twist|trick|punchline|fix|payoff)( is)?\\s*(\\?|:)",
+        "w": 3
+      },
+      {
+        "label": "fragment chain (No X. No Y.)",
+        "re": "(?:\\b(?:No|Not|Zero|Without|Never)\\b[^.!?\\n]{1,30}\\.\\s+){2,}",
+        "w": 3,
+        "case": true
+      },
+      {
+        "label": "whether you're",
+        "re": "\\bwhether you'?re\\b",
+        "w": 2
+      },
+      {
+        "label": "from X to Y (sweeping)",
+        "re": "(^|[.!?]\\s+)From [^,.]{1,40} to [^,.]{1,40},",
+        "w": 2,
+        "case": true
+      },
+      {
+        "label": "and that's the point",
+        "re": "\\b(and )?that'?s (the (whole )?point|the beauty|the magic|the trick|exactly the point|by design)\\b",
+        "w": 3
+      },
+      {
+        "label": "the real X is",
+        "re": "\\bthe real (question|problem|issue|win|value|cost|story|risk)\\b",
+        "w": 2
+      },
+      {
+        "label": "rhetorical self-answer",
+        "re": "\\b(why|how|what)( does| do| is| would| should)? [^.?!\\n]{3,60}\\?\\s+(Because|Simple|It|The answer|Short answer)\\b",
+        "w": 3
+      },
+      {
+        "label": "nothing X, nothing Y",
+        "re": "\\bnothing [^,.;]{1,40}, nothing [^,.;]{1,40}(,|and)",
+        "w": 2
+      },
+      {
+        "label": "rather than (contrast)",
+        "re": "\\brather than\\b",
+        "w": 0.5
+      },
+      {
+        "label": "X, not Y (contrast)",
+        "re": ",\\s+not\\s+(a|an|the|just|only|because|by|for|to|as)?\\s?\\w+",
+        "w": 0.5
+      }
+    ],
+    "tone": [
+      {
+        "label": "hype adjective",
+        "re": "\\b(powerful|elegant|beautiful(ly)?|magical(ly)?|like magic|delightful|amazing|awesome|incredible|exciting|stunning|blazing(ly)?[- ]fast|lightning[- ]fast)\\b",
+        "w": 2
+      },
+      {
+        "label": "intensifier",
+        "re": "\\b(truly|incredibly|absolutely|extremely|deeply|hugely|massively|vastly|remarkably|exceptionally|tremendously|genuinely)\\b",
+        "w": 2
+      },
+      {
+        "label": "excited / thrilled",
+        "re": "\\b(we'?re|we are|i'?m|i am) (excited|thrilled|delighted|happy|pleased) to\\b",
+        "w": 3
+      },
+      {
+        "label": "chat residue",
+        "re": "\\b(great question|i hope this helps|happy to help|feel free to|let me know if|certainly!|absolutely!|you'?re right)\\b",
+        "w": 3
+      },
+      {
+        "label": "just works",
+        "re": "\\bjust works\\b",
+        "w": 2
+      },
+      {
+        "label": "simply / easily (minimizer)",
+        "re": "\\b(simply|easily|effortlessly|trivially)\\b",
+        "w": 1
+      },
+      {
+        "label": "exclamation",
+        "re": "\\w!(\\s|$)",
+        "w": 2
+      },
+      {
+        "label": "opinion or emotion (USU)",
+        "re": "\\b(I|we) (feel|think|believe|love|hope)\\b|\\b(I'?m|we'?re|I am|we are) (confident|convinced|sure)\\b",
+        "w": 2
+      }
+    ],
+    "hedge": [
+      {
+        "label": "may/could potentially",
+        "re": "\\b(may|might|could|can) potentially\\b",
+        "w": 3
+      },
+      {
+        "label": "helps to / can help",
+        "re": "\\b(can|could|may|will|should) help (to )?(ensure|improve|reduce|mitigate|prevent|streamline|address|enable|provide)\\b",
+        "w": 2
+      },
+      {
+        "label": "aims to / seeks to",
+        "re": "\\b(aims?|seeks?|strives?) to\\b",
+        "w": 1
+      },
+      {
+        "label": "vague quantity",
+        "re": "\\b(various|numerous|a number of|a host of|countless|a multitude of)\\b",
+        "w": 1
+      },
+      {
+        "label": "vague magnitude",
+        "re": "\\b(significantly|substantially|dramatically|greatly|considerably|drastically)\\b",
+        "w": 2
+      },
+      {
+        "label": "generally speaking",
+        "re": "\\b(generally speaking|broadly speaking|in many cases|in most cases|more often than not|to some extent|in some ways)\\b",
+        "w": 1
+      },
+      {
+        "label": "arguably",
+        "re": "\\barguably\\b",
+        "w": 2
+      },
+      {
+        "label": "best practices",
+        "re": "\\b(industry )?best practices?\\b",
+        "w": 1
+      },
+      {
+        "label": "ensure (overuse)",
+        "re": "\\bensur(e|es|ed|ing)\\b",
+        "w": 0.5
+      },
+      {
+        "label": "vague word (USU)",
+        "re": "\\b(really|quite|very|a lot|lots of|huge|tons of)\\b",
+        "w": 0.25
+      },
+      {
+        "label": "generalization (USU)",
+        "re": "\\b(everyone knows|everybody knows|nobody (ever|really)|as (we all|everyone) knows?|it is (well|widely|commonly) known|obviously|of course)\\b",
+        "w": 2
+      }
+    ],
+    "headings": [
+      {
+        "label": "why this matters",
+        "re": "^why (this|it) matters",
+        "w": 3
+      },
+      {
+        "label": "key takeaways / benefits",
+        "re": "^(key|main) (takeaways?|benefits|features|considerations|highlights|insights|principles)",
+        "w": 3
+      },
+      {
+        "label": "conclusion",
+        "re": "^(conclusion|closing thoughts|final thoughts|wrapping up)",
+        "w": 2
+      },
+      {
+        "label": "the big picture",
+        "re": "^(the big picture|tl;?dr|at a glance|in a nutshell)",
+        "w": 1
+      },
+      {
+        "label": "question heading",
+        "re": "\\?$",
+        "w": 1
+      }
+    ]
+  },
+  "positive": {
+    "normative_caps": {
+      "re": "\\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|MAY|REQUIRED|RECOMMENDED|OPTIONAL)\\b",
+      "case": true
+    },
+    "normative_lower": {
+      "re": "\\b(must not|must|shall not|shall|should not|is required to|are required to)\\b"
+    },
+    "quantities": {
+      "re": "\\b\\d+(\\.\\d+)?\\s?(%|ms|µs|us|ns|s|sec|secs|seconds?|minutes?|mins?|hours?|days?|weeks?|[KMGTP]i?B|bytes?|octets?|bits?|req/s|rps|qps|x|times|percent|requests|nodes|replicas|cores|vCPUs?|connections)\\b"
+    },
+    "cross_refs": {
+      "re": "(\\bSection \\d|\\bRFC ?\\d{3,5}\\b|§\\s?\\d|\\[RFC\\d+\\]|\\bAppendix [A-Z]\\b|\\bIEEE (Std )?\\d)"
+    },
+    "terminology_heading": {
+      "re": "^(\\d+(\\.\\d+)*\\.?\\s+)?(terminology|definitions|glossary|conventions( and terminology)?|terms)\\b"
+    }
+  },
+  "scoring": {
+    "_comment": "Index thresholds per axis. An index at or below good scores 10, at or above bad scores 0, linear between. good is set from the gold set (RFCs and the Kubernetes architecture docs). See references/calibration.md.",
+    "vocabulary": {
+      "good": 1.0,
+      "bad": 12
+    },
+    "filler": {
+      "good": 0.8,
+      "bad": 8
+    },
+    "rhetoric": {
+      "good": 1.5,
+      "bad": 10
+    },
+    "tone": {
+      "good": 1.0,
+      "bad": 10
+    },
+    "typography": {
+      "good": 2.5,
+      "bad": 20
+    },
+    "structure": {
+      "good": 3.0,
+      "bad": 12
+    },
+    "precision": {
+      "good": 1.5,
+      "bad": 10
+    }
+  },
+  "weights": {
+    "_comment": "Weight of each axis in the overall score. The last two are judged by the reviewer, not measured.",
+    "vocabulary": 15,
+    "filler": 10,
+    "rhetoric": 15,
+    "tone": 10,
+    "typography": 10,
+    "structure": 10,
+    "precision": 10,
+    "terminology": 10,
+    "economy": 10
+  },
+  "acronyms": {
+    "_comment": "Acronyms readers know without expansion, per the USU standard's \"well-known acronyms do not need to be spelled out\". scan.py lists any other acronym the doc never expands. Add to this list freely.",
+    "known": [
+      "API",
+      "APIs",
+      "HTTP",
+      "HTTPS",
+      "URL",
+      "URLs",
+      "URI",
+      "URIs",
+      "JSON",
+      "YAML",
+      "XML",
+      "HTML",
+      "CSS",
+      "JS",
+      "DOM",
+      "SVG",
+      "CPU",
+      "CPUs",
+      "GPU",
+      "GPUs",
+      "RAM",
+      "OS",
+      "VM",
+      "VMs",
+      "DNS",
+      "TCP",
+      "UDP",
+      "IP",
+      "IPv4",
+      "IPv6",
+      "TLS",
+      "SSL",
+      "SSH",
+      "CLI",
+      "UI",
+      "UX",
+      "ID",
+      "IDs",
+      "PR",
+      "PRs",
+      "CI",
+      "CD",
+      "SDK",
+      "SQL",
+      "AWS",
+      "GCP",
+      "IAM",
+      "RPC",
+      "REST",
+      "UTF",
+      "ASCII",
+      "PDF",
+      "PNG",
+      "USB",
+      "NASA",
+      "GPS",
+      "EPA",
+      "US",
+      "UK",
+      "EU",
+      "OK",
+      "TODO",
+      "FAQ",
+      "AI",
+      "LLM",
+      "LLMs",
+      "ML",
+      "IETF",
+      "IEEE",
+      "RFC",
+      "RFCs",
+      "MDN",
+      "W3C",
+      "ISO",
+      "UTC",
+      "GB",
+      "MB",
+      "KB",
+      "TB",
+      "GiB",
+      "MiB",
+      "KiB",
+      "CORS",
+      "CSP",
+      "OAuth",
+      "JWT",
+      "PEM",
+      "TL",
+      "DR",
+      "EOF",
+      "CRLF",
+      "LF",
+      "NAT",
+      "VPN",
+      "LAN",
+      "WAN",
+      "CDN",
+      "QA",
+      "SLA",
+      "SLO",
+      "SLOs",
+      "MVP",
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "HEAD",
+      "OPTIONS",
+      "IANA",
+      "BCP",
+      "MIME",
+      "HMAC",
+      "RSA",
+      "AES",
+      "SHA",
+      "POSIX",
+      "UNIX",
+      "BSD",
+      "WWW",
+      "PHP",
+      "ACK",
+      "RTT",
+      "MTU",
+      "ICMP",
+      "QUIC",
+      "QEMU",
+      "KVM",
+      "ELF",
+      "TTL",
+      "NFS",
+      "SMTP",
+      "IMAP",
+      "OpenAI"
+    ],
+    "ignore": [
+      "MUST",
+      "SHALL",
+      "SHOULD",
+      "MAY",
+      "REQUIRED",
+      "RECOMMENDED",
+      "OPTIONAL",
+      "NOT",
+      "AND",
+      "OR",
+      "THE",
+      "NOTE",
+      "ALL",
+      "NEW",
+      "DONE",
+      "YES",
+      "NO",
+      "TBD",
+      "WIP",
+      "NB",
+      "II",
+      "III",
+      "IV",
+      "VI",
+      "README",
+      "LICENSE",
+      "CHANGELOG",
+      "CONTRIBUTING",
+      "AUTHORS",
+      "OWNERS",
+      "CODEOWNERS",
+      "MAINTAINERS",
+      "NOTICE",
+      "SECURITY"
+    ]
+  }
+}
