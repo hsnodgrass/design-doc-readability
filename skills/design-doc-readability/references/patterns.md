@@ -22,6 +22,7 @@ means nothing. Grade the habit, not the instance.
 | load-bearing | "The lock is load-bearing." | "Removing the lock lets two writers race." |
 | quietly | "The cache quietly drops the entry." | "The cache drops the entry and logs nothing." |
 | the shape of | "The shape of the API is simple." | "The API has two calls." |
+| rare word pair (reading only) | "Every test was verified red against the old code." | "Every test fails against the old code." |
 
 ## Filler
 
@@ -60,8 +61,8 @@ Not matched by the scanner, so watch for these while reading:
 - Antithesis in pairs: "Easy to start, hard to outgrow."
 - Lists of exactly three items, again and again, where the content doesn't
   come in threes.
-- Personification: "the proxy refuses", "the scheduler wants", in places
-  where it hides who does what.
+- Personification used to persuade: "the design refuses to compromise".
+  For personification that hides a mechanism, see Precision.
 
 ## Tone
 
@@ -72,6 +73,11 @@ Not matched by the scanner, so watch for these while reading:
 | Enthusiasm | "We're excited to propose..." | "This document proposes..." |
 | Minimizer | "Simply call the endpoint." | "Call the endpoint." |
 | Chat residue | "Feel free to leave comments!" | Delete. |
+| Inanimate subject, animate verb | "`is_file()` swallows the error and returns False." | "`is_file()` catches the error and returns False." |
+
+The scanner's list for the last row holds only chat-register verbs, such
+as "swallows", "bites", and "eats". A sentence that it counts here is not
+counted again under Precision.
 
 ## Typography
 
@@ -95,6 +101,11 @@ Not matched by the scanner, so watch for these while reading:
   insight", "Conclusion", headings phrased as questions.
 - **Stacked sentences** over 40 words, joined by dashes, semicolons, and
   parentheses. Split them.
+- **Object relatives without "that"** (the scanner's "reduced object
+  relative"): "Rotate the key it wraps." A short one that reads at once
+  is fine. Nested ones are not: "The lease the node the scheduler picked
+  holds expires in 10 s." Rewrite: "The scheduler picks a node. The lease
+  that the node holds expires in 10 s."
 
 ## Precision
 
@@ -105,6 +116,11 @@ Not matched by the scanner, so watch for these while reading:
 | vague magnitude | "Significantly reduces latency." | "Reduces p99 latency from 800 ms to 120 ms." |
 | vague quantity | "Various services use tokens." | "14 services use tokens." |
 | aims to | "TRS aims to refresh tokens early." | "TRS refreshes a token 10 minutes before it expires." |
+| personification that hides a mechanism (reading only) | "The scheduler wants a fresh token." | "The scheduler requests a new token when the old one has less than 10 minutes left." |
+
+RFCs write "the recipient wants" and "a client decides". Mark
+personification down only where the verb stands in for a mechanism that
+the doc doesn't state.
 
 ## Terminology (reading only)
 
@@ -122,6 +138,21 @@ Not matched by the scanner, so watch for these while reading:
   some background."
 - Meta commentary: "as argued below", "this is discussed at length later".
 - Status prose that narrates the doc's own history in the body.
+
+Compression. Each of these saves a word or two and costs the reader a
+second pass. Recent models use them more than human writers do (see
+"Concise and compressed" in the rubric). Count them as a habit across the
+doc. Object relatives without "that" are under Structure.
+
+| Pattern | Example | Rewrite |
+| --- | --- | --- |
+| Dropped "that" before a clause | "The client found the token expired." | "The client found that the token had expired." |
+| One-off noun as verb | "We can feature-flag it and calendar the review." | "We can put it behind a feature flag and schedule a review." |
+| Noun stack | "The lease renewal backoff window is 30 s." | "After a failed lease renewal, the node waits 30 s before it retries." |
+| Long subject | "The pods the controller started before the upgrade and never restarted keep the old config." | "Some pods started before the upgrade and never restarted. They keep the old config." |
+
+A noun stack that is a term of art or a defined term is not compression:
+"TLS record layer", "control plane node".
 
 ## From the USU technical writing standards
 
@@ -149,4 +180,8 @@ The scanner also reports, without scoring:
   The gold docs are near 30%. Look only for passives that hide the actor.
 - `contractions_per_k`, `first_person_per_k`, `second_person_per_k`: for
   checking register and narrative person against the rubric.
+- `that_omission_share`: of the places where the scanner finds an
+  optional "that" (complement clauses and object relatives), the share
+  where the doc leaves it out. It is a signal for the Economy reading and
+  is not scored.
 - `undefined_acronyms` and `vague_openers`: lists to check by reading.

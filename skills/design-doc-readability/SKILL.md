@@ -54,8 +54,9 @@ It ignores code blocks, inline code, URLs, and front matter. It reports:
 - Two lists to check by reading: acronyms the doc never spells out
   (`undefined_acronyms`), and sentences that open with a vague "This" or
   "It" (`vague_openers`).
-- Metrics it reports but doesn't score, such as the share of passive
-  sentences and the rate of contractions. The rubric says why.
+- Metrics that it reports but doesn't score, such as the share of passive
+  sentences, the rate of contractions, and how often the doc leaves out an
+  optional "that" (`that_omission_share`). The rubric says why.
 
 The scanner finds only what a regex can find. Recent models avoid the
 well-known word list and still write prose that reads as generated, so a high
@@ -76,6 +77,12 @@ it:
   in HTTP authentication), a quotation, an error message, or a product name.
 - Look for what the scanner missed, such as a rhetorical structure in words
   the catalog doesn't list.
+- Look for compression. The scanner counts object relatives without
+  "that" (Structure) and a short list of chat-register verbs with
+  inanimate subjects (Tone). It can't find other dropped "that", nouns
+  used as verbs, noun stacks, long subjects, or rare word pairs. The rubric
+  says which axis each one goes to, and `that_omission_share` says where
+  to look.
 - Move a score by up to 3 points either way. Go further only to remove false
   positives, and say so.
 - Give a reason, with a line number, for every change.
@@ -141,6 +148,8 @@ does well.>
 
 Give three to five worst passages and three to five fixes. Each rewrite must
 keep the passage's meaning and facts. Don't add claims the doc doesn't make.
+Don't make a rewrite shorter by compressing it: keep "that" where it helps
+the sentence parse, and don't turn nouns into verbs or stack nouns.
 
 Print the score card in the conversation. Write it to a file only if the user
 asks for one.
