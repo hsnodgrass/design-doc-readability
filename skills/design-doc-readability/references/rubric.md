@@ -20,7 +20,8 @@ The RFCs and the Kubernetes docs share these traits. They are the target.
 
 - **Declarative sentences.** One claim per sentence. The subject is the thing
   that acts: "The server closes the connection," not "Connection closure is
-  handled."
+  handled." The verb is something the subject does: a server sends,
+  closes, and rejects. It doesn't bite, swallow, or eat.
 - **Defined terms.** A terminology section, or a definition at first use.
   After that, one word for one concept. A "client" never becomes a "caller"
   or a "consumer" later.
@@ -64,7 +65,7 @@ the scanner reports it; the reviewer still checks the hits.
 | Jargon suited to the audience. Spell out an acronym at first use, unless it is well known. | Terminology | Scanner: the `undefined_acronyms` list. Reviewer: jargon. |
 | No redundancies ("true fact", "exactly identical"). | Filler | Scanner: "redundancy". |
 | No non-specific references or words ("a bit"). | Precision | Reviewer, with the scanner's vague magnitude and quantity hits. |
-| No filler words (that, very, just). | Filler, Precision | Scanner: "vague word" for "very"; reviewer for "that" and "just". |
+| No filler words (that, very, just). | Filler, Precision | Scanner: "vague word" for "very"; reviewer for "just". Don't mark down "that" (see "Concise and compressed" below). |
 | No abstract or vague language (really, quite, many, a lot, huge). | Precision | Scanner: "vague word". |
 | No generalizations ("everyone knows", "nobody ever"). | Precision | Scanner: "generalization". |
 | Familiar words, not complicated ones. | Vocabulary | Scanner: "inflated word" (utilize, facilitate, commence). |
@@ -105,6 +106,31 @@ the scanner reports it; the reviewer still checks the hits.
 - **Sentence length.** USU's 10 to 20 words is a target for the average,
   not a cap. The gold docs average about 17 words, and one sentence in
   ten is over 27 (Kubernetes) to 33 (RFCs).
+- **Concise and compressed.** USU asks for no filler words and no wordy
+  phrases. Generated text also has the opposite fault: it drops words
+  that a reader uses to parse a sentence. Clark, Martin, and Mahowald,
+  "Why is AI-generated language so hard to understand?"
+  (arXiv:2610.29162, 2026), found that recent models drop the optional
+  "that" ("the token the broker issued"), turn nouns into verbs
+  ("calendar it"), stack three or more nouns, give inanimate subjects
+  verbs for living things ("the check bites"), and use rare word pairs.
+  Each was more common in model text than in paraphrases of the same
+  text. Against human text, rare word pairs and inanimate subjects were
+  more common for all nine frontier models in the study, and longer
+  dependencies, noun stacks, and dropped "that" for most of them in chat.
+  The reading studies that the paper cites link each of these features to
+  harder comprehension. So "that" is not filler, and a shorter sentence is
+  not better if a reader has to parse it twice. Cut words that say
+  nothing. Keep the words that show how a sentence is built. Shortening
+  "in order to" to "to" is still fine.
+
+  The paper is a preprint. It measured English chat, code, and essays.
+  It didn't measure design docs, and its effects were smallest in the
+  essays, which are closest to a design doc. Its human baselines are
+  subtitles, StackExchange, and student essays. So grade these features
+  as a habit across the doc, never one instance at a time. Human writers
+  use the short forms too: a short object relative without "that" that
+  reads at once is not a fault.
 
 ## Weights
 
@@ -131,6 +157,10 @@ realm, empower, unlock, streamline, foster, navigate (figuratively),
 load-bearing, quietly, genuinely. Also, from USU: inflated words where a
 familiar one would do (utilize, facilitate, commence), clichés ("easier said
 than done", "low-hanging fruit"), and slang. See [patterns.md](patterns.md).
+
+Also: rare word pairs that a technical writer wouldn't put together, such
+as "verified red" or "the papercut users feel". They aren't on any list,
+so find them by reading.
 
 - **10:** None, or one or two that are terms of art.
 - **7:** A few, scattered. Most paragraphs are clean.
@@ -185,6 +215,15 @@ emotion ("I feel", "we believe", "we're confident"), language that isn't
 bias-free or gender-neutral ("the operator ... his"), and a narrative person
 that doesn't fit the section (see above).
 
+Also: an inanimate subject with a chat-register verb for a living thing,
+such as "`refresh()` swallows the error" or "this edge case bites". The
+scanner counts these as "inanimate subject, animate verb", from a short
+list of verbs that the gold docs almost never use this way (swallows,
+bites, eats). Conventional verbs such as "the client knows" are not on the
+list. Where one of those hides a mechanism, it is graded under Precision.
+A sentence counts on only one of the two axes: if the scanner counted
+it here, don't mark it down again in Precision.
+
 - **10:** Neutral throughout. Claims are supported by facts, not by
   adjectives or beliefs.
 - **7:** One or two adjectives that sell, or one stated belief.
@@ -219,6 +258,18 @@ How the doc is laid out.
 - Sentences longer than 40 words that stack clauses.
 - Paragraphs longer than USU's four to six lines (about 100 words). In the
   gold docs, 1% to 3% of paragraphs run that long.
+- Object relative clauses without "that": "the key it wraps", "the names
+  the harness already uses". The scanner counts this sentence pattern
+  here, as "reduced object relative". The gold docs use the form rarely,
+  and keep "that" more often than generated docs do (see "Concise and
+  compressed").
+
+Check each "reduced object relative" hit by reading it. A short one that
+reads at once is how human writers use the form, so discount it. A hit
+that nests one clause in another, or that puts many words between a noun
+and its verb, is the habit: "The lease the node the scheduler picked
+holds expires in 10 s." As on the other measured axes, move the score
+by up to 3 points from what that reading shows, and give a line number.
 
 - **10:** Numbered sections. Paragraphs of a few sentences carry the
   argument. Lists enumerate sets and steps.
@@ -237,8 +288,14 @@ Hedges: "may potentially", "can help ensure", "aims to", "various",
 "quite", "a lot", "huge"), non-specific references ("adjust it a bit"),
 generalizations ("everyone knows"), sentences that open with "This" or "It"
 when the referent isn't clear, passive voice that hides the actor, and
-shifts in verb tense. Specifics: numbers with units, stated limits, "MUST"
-and "MUST NOT", named components, section cross-references.
+shifts in verb tense. Also: personification that hides a mechanism, such
+as "the proxy refuses" or "the scheduler wants" where the reader needs to
+know what happens. RFCs write "the recipient wants" and "a client
+decides", so mark it down only where the verb stands in for a mechanism
+that the doc doesn't state. The chat-register verbs, such as "swallows"
+and "bites", are scored under Tone; don't count them again here.
+Specifics: numbers with units, stated limits, "MUST" and "MUST NOT",
+named components, section cross-references.
 
 - **10:** Every claim that could be a number is one. Every sentence names
   what acts. Requirements say what happens, and what happens on failure.
@@ -273,9 +330,10 @@ so judge by the audience, not by the count.
 
 ## 9. Economy (reviewer only)
 
-Whether each sentence carries one idea and earns its place.
+Whether each sentence carries one idea, earns its place, and can be read
+once. Economy fails in two ways: padding and compression.
 
-Look for: the same point made in the introduction, a section, and a
+Padding: the same point made in the introduction, a section, and a
 summary; sentences that stack three or four clauses with dashes,
 semicolons, and parentheses; paragraphs that restate the heading; meta
 commentary about the doc ("as argued below", "this section will"); long
@@ -284,10 +342,30 @@ sentence, or with more than one main idea; wordy or awkward sentences; and
 missing transitions, where the reader can't tell how one sentence follows
 from the last.
 
-- **10:** Nothing could be cut without losing content. A reader can skim the
-  first sentence of each paragraph.
-- **7:** Some repetition, or a few overloaded sentences.
-- **4:** The doc could lose a third of its length. Many sentences need two
-  readings.
+Compression: words cut until the reader has to rebuild the sentence. Look
+for a dropped "that" before a clause, where the sentence misleads without
+it ("The client found the token expired"); nouns used as one-off verbs
+("we can feature-flag it", "calendar the review"); three or more nouns
+stacked into a phrase that the doc never defines ("lease renewal backoff
+window"); and a subject so long that the reader loses it before the verb.
+A stack that is a term of art or a defined term ("TLS record layer") is
+fine. Object relatives without "that" are scored under Structure, from
+the scanner's hits; don't count them again here. See
+[patterns.md](patterns.md).
+
+The scanner reports `that_omission_share`: of the places where it finds
+an optional "that" (complement clauses and object relatives), the share
+where the doc leaves it out. It is a signal and is not scored. A high share
+tells you to read for dropped "that". Compare it with the gold docs'
+share in [calibration.md](calibration.md), and score only what the reading
+finds.
+
+- **10:** Nothing could be cut without losing content, and nothing was cut
+  that a reader needs. A reader can skim the first sentence of each
+  paragraph.
+- **7:** Some repetition, a few overloaded sentences, or a few compressed
+  phrases.
+- **4:** The doc could lose a third of its length, or it is compressed
+  throughout. Many sentences need two readings.
 - **1:** Most of the doc restates itself, or most sentences need two
   readings.
