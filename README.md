@@ -23,12 +23,12 @@ A score card for one doc, with nine axes scored from 0 to 10:
 | Vocabulary | 15 | Words a model reaches for, such as "delve", "leverage", and "seamless", and inflated words such as "utilize" |
 | Filler | 10 | Phrases that frame instead of saying something, redundancies, and wordy phrases |
 | Rhetoric | 15 | Contrasts such as "It's not X, it's Y", reveals, fragment chains, and rhetorical questions |
-| Tone | 10 | Hype, intensifiers, opinion, and chat residue |
+| Tone | 10 | Hype, intensifiers, opinion, chat residue, and things given a will of their own ("the parser swallows the error") |
 | Typography | 10 | Em dashes, bold, emoji, and arrows in prose |
-| Structure | 10 | Bullets where paragraphs belong, bold-label bullets, and long sentences and paragraphs |
+| Structure | 10 | Bullets where paragraphs belong, bold-label bullets, long sentences and paragraphs, and relative clauses with "that" dropped ("the key it wraps") |
 | Precision | 10 | Hedges and vague words, against numbers, limits, and stated requirements |
 | Terminology | 10 | Defined terms, one name per concept, and acronyms spelled out |
-| Economy | 10 | Repetition, and sentences that stack clauses |
+| Economy | 10 | Repetition, sentences that stack clauses, and prose cut so short that it takes two readings |
 
 The overall score is the weighted mean, from 0 to 100:
 
@@ -110,10 +110,20 @@ The skill grades against three sources:
   of technical prose:
   https://engineering.usu.edu/students/engineering-writing-center/writing-resources/technical-writing-standards
 
+The patterns of compressed prose, such as a dropped "that", nouns used as
+verbs, and noun stacks, come from Clark, Martin, and Mahowald, "Why is
+AI-generated language so hard to understand?" (arXiv:2610.29162, 2026).
+The paper is a v1 preprint. It studied English chat, code, and essays, not
+design docs. So the skill checks most of these patterns by reading. The
+scanner scores two of them, the dropped "that" in an object relative clause
+and a verb for a living thing used with an inanimate subject, because both
+were tested on the gold set and rarely hit it.
+
 The scanner's thresholds were set from 10 RFCs and the 10 Kubernetes
-architecture pages, and checked against 19 design docs from a private
-repository and a fixture written in heavy LLM style. The RFCs score 99 to
-100, the Kubernetes pages have a median of 97, and the fixture scores 0.
+architecture pages, and checked against design docs from a private
+repository and three fixtures. The RFCs score 99 to 100 and the Kubernetes
+pages have a median of 97. The fixture in heavy LLM style scores 0, and the
+fixture in the compressed style that the paper describes scores 72.
 `references/calibration.md` has the numbers and the steps to recalibrate.
 
 ## Tuning
@@ -154,5 +164,5 @@ skills/design-doc-readability/
     calibrate.py         Prints the scanner's results over a set of docs
 tests/
   test_design_doc_readability.py
-  fixtures/              An LLM-heavy doc and an RFC-like doc
+  fixtures/              An LLM-heavy doc, an RFC-like doc, and a compressed doc
 ```

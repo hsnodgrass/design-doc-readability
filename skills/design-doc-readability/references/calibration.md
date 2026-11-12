@@ -4,7 +4,8 @@ The thresholds in `../scripts/patterns.json` (`scoring`) were set on
 2026-11-10. The gold set is RFCs and the Kubernetes architecture docs. The
 other sets show where generated prose falls. The patterns and metrics drawn
 from the USU technical writing standards were checked against the same
-sets.
+sets. The two syntax patterns were added on 2026-11-12 and checked as
+described under "The syntax checks".
 
 ## Corpus
 
@@ -13,7 +14,7 @@ sets.
 | RFCs | 10 | 267,000 | RFC 5246, 6749, 7230, 7519, 8259, 8446, 8949, 9000, 9110, 9293, plain text from rfc-editor.org |
 | Kubernetes architecture docs | 10 | 8,900 | Every page under `kubernetes.io/docs/concepts/architecture/`, as Markdown from the `kubernetes/website` repository (listed below) |
 | Internal design docs | 19 | 96,000 | Markdown design docs from a private repository, not published here |
-| Fixtures | 2 | 960 | `tests/fixtures/` in this repository |
+| Fixtures | 3 | 1,400 | `tests/fixtures/` in this repository |
 
 Word counts are the scanner's: prose, list, and table words, without code,
 front matter, or Hugo shortcodes.
@@ -95,7 +96,7 @@ why the reviewer scores them.
 
 The USU guidelines added five scored pattern groups (redundancy, wordy
 phrase, vague word, generalization, inflated word), a cliché list, an
-opinion pattern, and a long-paragraph term in the structure index. They
+opinion pattern, and a term for long paragraphs in the structure index. They
 also added metrics that are reported but not scored.
 
 | Metric | RFCs | Kubernetes | Internal docs |
@@ -131,6 +132,81 @@ acronyms such as OID, DER, and RSASSA unexpanded for readers who know them,
 and their median is 35 such acronyms per doc, many from the reference
 lists. The Kubernetes pages have a median of 0.5 (RBAC and HA are the
 usual ones). In the internal docs it is 11.
+
+## The syntax checks
+
+Clark, Martin, and Mahowald (arXiv:2610.29162, a v1 preprint) found that
+frontier models drop optional words more often than human writers do, and
+use other constructions that slow readers. They used a full parser and a
+classifier. Two of these constructions can be found with a regular
+expression:
+
+- "reduced object relative", in the `syntax` category, which feeds the
+  structure index with weight 1: a relative clause with its "that"
+  dropped, as in "the key it wraps". About 85 to 90% of its hits were
+  real in a hand check of 32 hits from the RFCs and the internal docs.
+- "inanimate subject, animate verb", in the `tone` category, with weight
+  2: a code span, a pronoun, or "the" and a noun, followed by a verb for a
+  living thing, as in "`refresh()` swallows the error". The list leaves out
+  verbs that systems docs use by convention, such as "knows", "wants",
+  "decides", and "watches", because the RFCs and Kubernetes pages use them
+  too.
+
+Noun stacks, nouns used as verbs, dependency length, and rare word pairs
+are left to the reviewer. Without a part-of-speech tagger, a noun-stack
+pattern was right about half the time, and the RFCs use many compounds as
+terms of art. A noun-as-verb list found nothing in the gold set or the
+internal docs. Dependency length and word-pair rarity need a parser or a
+language model.
+
+The scanner also reports `that_omission_share`, unscored: of the clauses
+where "that" is optional (a complement after "knows" or "ensures", or an
+object relative), the share written without it. The count is in
+`that_clauses`. Human writers drop "that" too, so the share is a hint for
+the reviewer, and it is noisy when a doc has few such clauses.
+
+These checks were run on 2026-11-12 over the same RFCs and Kubernetes
+pages, fetched again, and over a second private set: 40 Markdown design
+docs, 160,000 words. These are not the 19 internal docs in the tables
+above, so their subtotals differ from those. The current scanner counts
+283,000 words in the RFCs.
+
+Per 1,000 words, for docs of 400 words or more:
+
+| Measure | RFCs | Kubernetes | Internal docs (40) |
+| --- | --- | --- | --- |
+| Reduced object relatives, median | 0.06 | 0 | 1.61 |
+| Reduced object relatives, range | 0 to 0.31 | 0 to 1.55 | 0 to 4.47 |
+| Inanimate subject, animate verb, pooled | 0.004 (1 hit) | 0 | 0 |
+| `that_omission_share`, pooled | 19% of 360 clauses | 5 of 8 clauses | 98% of 314 clauses |
+| `that_omission_share`, median of docs with 5 or more such clauses | 23% (9 docs) | No doc has 5 | 100% (26 docs) |
+
+Measured subtotals before and after the change:
+
+| Set | Lowest | Median | Highest | Docs that changed |
+| --- | --- | --- | --- | --- |
+| RFCs | 99.1, no change | 100, no change | 100 | 0 of 10 |
+| Kubernetes | 66.2, no change | 97, no change | 100 | 1 of 10: `cloud-controller.md`, 95.6 to 93.1 |
+| Internal docs (40) | 66.2 to 65.0 | 77.1 to 76.1 | 91.2, no change | 31 of 40, by at most 6.3 |
+| `llm-heavy.md` | 0 | 0 | 0 | No hits |
+| `rfc-like.md` | 100 to 98.1 | | | 2 true hits |
+| `compressed.md` | 82.2 to 72.2 | | | New fixture |
+
+The fixture `compressed.md` is written in the style that the paper
+describes. It avoids the known word list, so before this change it scored
+82. The
+fixture `llm-heavy.md` is written in the older style and has none of these
+constructions.
+
+The internal docs keep "that" in 5 of 314 clauses where it is optional.
+The RFCs keep it in 291 of 360. Part of that gap may come from this skill:
+until 2026-11-12 the rubric passed on USU's rule that "that" is a filler
+word, and these docs may have been revised after a grade from it. Read the
+internal column as an upper bound on the habit, not as a clean measure of
+model prose.
+
+The rest of the paper's constructions are graded by reading only. Before
+the scanner scores any of them, measure their rates on the gold set.
 
 ## Recalibrating
 

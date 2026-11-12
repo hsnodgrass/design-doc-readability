@@ -571,6 +571,11 @@
         "label": "opinion or emotion (USU)",
         "re": "\\b(I|we) (feel|think|believe|love|hope)\\b|\\b(I'?m|we'?re|I am|we are) (confident|convinced|sure)\\b",
         "w": 2
+      },
+      {
+        "label": "inanimate subject, animate verb",
+        "re": "\\b(?:x|it|this|that|(?:the|a|an|each|every|its)\\s+[a-z][\\w-]*)\\s+(?:quietly\\s+|silently\\s+|happily\\s+|just\\s+|simply\\s+|still\\s+)?(?:(?:doesn'?t|does not|won'?t|never|can'?t|cannot)\\s+(?:swallow|bite|eat|care|forget|forgive|complain|hope|insist|mind|lie)\\b|(?:swallows|swallowed|bites|eats|ate|chews|chokes|choked|promises|forgets|forgot|hopes|cares|complains|insists|fights|forgives|hates|loves|worries|pretends|shrugs|hammers|steals|sulks|panics|begs|gossips|lies to|lied to)\\b)",
+        "w": 2
       }
     ],
     "hedge": [
@@ -654,6 +659,13 @@
       {
         "label": "question heading",
         "re": "\\?$",
+        "w": 1
+      }
+    ],
+    "syntax": [
+      {
+        "label": "reduced object relative",
+        "re": "\\b(?:the|a|an|every|each|any)\\s+(?!(?:time|times|moment|way|day|point|extent|place|case|reason|same|following|first|last|only|one)\\b)[a-z]{3,}\\s+(?:(?:the|this|our|your|its)\\s+(?:[a-z]+\\s+)?[a-z]+|we|you|they|it)\\s+(?:never\\s+|already\\s+|just\\s+|still\\s+)?(?:[a-z]+(?:ed|es|s)|wrote|built|chose|saw|knew|made|took|gave|ran|left|kept|held|sent|got)\\b(?!\\s+(?:to|that)\\b)",
         "w": 1
       }
     ]

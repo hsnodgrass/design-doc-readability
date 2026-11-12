@@ -105,6 +105,52 @@ class ScanTest(unittest.TestCase):
         self.assertIn("cliché (USU)", patterns(r, "vocabulary"))
         self.assertEqual(r["hits"]["vague_openers"], ["This is easier said than done."])
 
+    def test_reduced_object_relative(self):
+        for text in ("Rotate the key it wraps.",
+                     "Keep the names the client already uses.",
+                     "Check every token the issuer signed."):
+            r = scan(self.write("orc.md", f"# T\n\n{text}\n"))
+            self.assertIn("reduced object relative", patterns(r, "syntax"), text)
+        for text in ("Rotate the key that it wraps.",
+                     "Refresh every time it sends a request.",
+                     "The key it uses to sign is in the store."):
+            r = scan(self.write("orc.md", f"# T\n\n{text}\n"))
+            self.assertEqual(r["hits"]["syntax"], [], text)
+
+    def test_inanimate_subject_animate_verb(self):
+        for text in ("The call `refresh()` swallows the error.",
+                     "The cache doesn't care which caller asked.",
+                     "The check bites during deploys."):
+            r = scan(self.write("anim.md", f"# T\n\n{text}\n"))
+            self.assertIn("inanimate subject, animate verb", patterns(r, "tone"), text)
+        for text in ("The client knows the key.",
+                     "An endpoint that wishes to close sends a frame.",
+                     "The controller watches the API server."):
+            r = scan(self.write("anim.md", f"# T\n\n{text}\n"))
+            self.assertNotIn("inanimate subject, animate verb", patterns(r, "tone"), text)
+
+    def test_that_omission_share(self):
+        r = scan(self.write("that.md", (
+            "# T\n\n"
+            "The client knows that the key is valid. Rotate the key that it wraps. "
+            "The server ensures the token is fresh. Keep every name the caller uses.\n"
+        )))
+        self.assertEqual(r["metrics"]["that_clauses"], 4)
+        self.assertEqual(r["metrics"]["that_omission_share"], 0.5)
+        r = scan(self.write("none.md", "# T\n\nThe parser reads one record at a time.\n"))
+        self.assertEqual(r["metrics"]["that_clauses"], 0)
+        self.assertIsNone(r["metrics"]["that_omission_share"])
+
+    def test_compressed_fixture(self):
+        r = scan(FIXTURES / "compressed.md")
+        gold = scan(FIXTURES / "rfc-like.md")
+        self.assertIn("reduced object relative", patterns(r, "syntax"))
+        self.assertIn("inanimate subject, animate verb", patterns(r, "tone"))
+        self.assertGreaterEqual(r["metrics"]["that_omission_share"], 0.8)
+        self.assertLess(r["mechanical_scores"]["structure"], gold["mechanical_scores"]["structure"])
+        self.assertLess(r["mechanical_scores"]["tone"], 5)
+        self.assertLess(r["mechanical_subtotal"], gold["mechanical_subtotal"] - 15)
+
     def test_undefined_acronyms(self):
         path = self.write("acr.md", (
             "# T\n\n"

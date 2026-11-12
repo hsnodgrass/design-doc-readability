@@ -50,6 +50,24 @@ VAGUE_OPENER = re.compile(
 PASSIVE = re.compile(
     r"\b(is|are|was|were|be|been|being)\s+(\w+ly\s+)?(\w+ed|known|done|given|made|taken|sent|"
     r"written|built|seen|held|kept|set|run|read|shown|chosen|drawn|bound|found|left|put)\b", re.I)
+# Clauses where "that" is optional, for that_omission_share. A complement
+# clause after a verb such as "knows" or "ensures", with or without "that",
+# and an object relative with "that" or "which". The object relative without
+# it is the "reduced object relative" pattern in the syntax category.
+_COMP_VERB = (r"\b(?:know|knew|knows|ensure|ensures|ensured|mean|means|meant|sure|assume|assumes|"
+              r"assumed|believe|believes|think|thinks|guarantee|guarantees|show|shows|showed|says|"
+              r"said|confirm|confirms|verify|verifies|note|notes|claim|claims|expect|expects|"
+              r"requires|imply|implies|indicate|indicates)")
+_CLAUSE_SUBJECT = r"(?:the|a|an|this|each|every|it|we|they|you|he|she|no|all|its|our|their)(?:\s+[a-z][\w-]*){0,3}?"
+_AUX = (r"(?:is|are|was|were|has|have|had|will|would|can|could|must|should|may|might|does|did|"
+        r"doesn['’]t|isn['’]t|won['’]t)\b")
+COMPLEMENT_BARE = re.compile(rf"{_COMP_VERB}\s+{_CLAUSE_SUBJECT}\s+{_AUX}", re.I)
+COMPLEMENT_THAT = re.compile(rf"{_COMP_VERB}\s+that\s+{_CLAUSE_SUBJECT}\s+{_AUX}", re.I)
+RELATIVE_THAT = re.compile(
+    r"\b(?:the|a|an|every|each|any)\s+[a-z]{3,}\s+(?:that|which)\s+"
+    r"(?:(?:the|this|our|your|its)\s+(?:[a-z]+\s+)?[a-z]+|we|you|they|it)\s+"
+    r"(?:never\s+|already\s+|just\s+|still\s+)?(?:[a-z]+(?:ed|es|s)|wrote|built|chose|saw|knew|"
+    r"made|took|gave|ran|left|kept|held|sent|got)\b", re.I)
 CONTRACTION = re.compile(r"\b\w+(n['’]t|['’]re|['’]ll|['’]ve|['’]d)\b|\b(it|that|there|here|what|who|let)['’]s\b", re.I)
 FIRST_PERSON = re.compile(r"\b(I|we|us|our|my)\b", re.I)
 SECOND_PERSON = re.compile(r"\b(you|your|yours)\b", re.I)
@@ -266,6 +284,14 @@ def scan(path, patterns_path, max_hits):
     unit_text = "\n".join(t for _, t, _ in units)
     undefined = _undefined_acronyms(units, unit_text, known_acronyms)
 
+    # The share of optional-"that" clauses written without it. Unscored: human
+    # writers drop it too, and the share is noisy when a doc has few clauses.
+    that_kept = sum(len(COMPLEMENT_THAT.findall(t)) + len(RELATIVE_THAT.findall(t))
+                    for _, t, _ in units)
+    that_dropped = (sum(len(COMPLEMENT_BARE.findall(t)) for _, t, _ in units)
+                    + len(hits.get("syntax", {}).get("reduced object relative", {"lines": []})["lines"]))
+    that_clauses = that_kept + that_dropped
+
     pos = {k: 0 for k in positive}
     for k, rx in positive.items():
         if k == "terminology_heading":
@@ -300,6 +326,8 @@ def scan(path, patterns_path, max_hits):
             sum(1 for s in sentence_texts if VAGUE_OPENER.match(s)) / max(len(sentence_texts), 1), 3),
         "passive_sentence_share": round(
             sum(1 for s in sentence_texts if PASSIVE.search(s)) / max(len(sentence_texts), 1), 3),
+        "that_clauses": that_clauses,
+        "that_omission_share": round(that_dropped / that_clauses, 3) if that_clauses else None,
         "contractions_per_k": round(len(CONTRACTION.findall(unit_text)) * per_k, 2),
         "first_person_per_k": round(len(FIRST_PERSON.findall(unit_text)) * per_k, 2),
         "second_person_per_k": round(len(SECOND_PERSON.findall(unit_text)) * per_k, 2),
@@ -334,7 +362,8 @@ def scan(path, patterns_path, max_hits):
         + 4 * max(m["one_sentence_paragraph_share"] - 0.3, 0)
         + 20 * max(m["long_sentence_share"] - 0.06, 0)
         + 20 * max(m["long_paragraph_share"] - 0.04, 0)
-        + weighted("headings") * per_k,
+        + weighted("headings") * per_k
+        + weighted("syntax") * per_k,
         "precision": m["hedge_weighted_per_k"]
         - 0.15 * min(m["normative_caps_per_k"] + m["normative_lower_per_k"], 20)
         - 0.15 * min(m["quantities_per_k"], 10),
