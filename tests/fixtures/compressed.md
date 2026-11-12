@@ -50,5 +50,5 @@ thundering herd problem the single-flight lock solves.
 The grace window hides real outages if it runs too long. The metric we
 dashboard catches that, as long as someone watches it. A misconfigured
 clock skew tolerance setting could also make the scheduler think tokens
-expired early. We believe the alert covers this, and we are sure the tests
-catch the obvious cases. The team agreed the risk is acceptable.
+expired early. The alert covers this, and the tests catch the obvious
+cases. The team agreed the risk is acceptable.

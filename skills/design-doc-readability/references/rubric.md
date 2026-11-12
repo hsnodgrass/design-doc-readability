@@ -217,12 +217,18 @@ that doesn't fit the section (see above).
 
 Also: an inanimate subject with a chat-register verb for a living thing,
 such as "`refresh()` swallows the error" or "this edge case bites". The
-scanner counts these as "inanimate subject, animate verb", from a short
-list of verbs that the gold docs almost never use this way (swallows,
-bites, eats). Conventional verbs such as "the client knows" are not on the
-list. Where one of those hides a mechanism, it is graded under Precision.
-A sentence counts on only one of the two axes: if the scanner counted
-it here, don't mark it down again in Precision.
+scanner counts these as "inanimate subject, animate verb": a verb from a
+short list that the gold docs almost never use this way (swallows, bites,
+eats, hammers), after a code span, a pronoun, or a determiner and up to
+three words. It skips subjects that name people, such as "the user", "an
+attacker", and "the caller", so "An attacker steals the cookie" is not a
+hit. Conventional verbs such as "the client knows" are not on the list.
+Where one of those hides a mechanism, it is graded under Precision. A
+sentence counts on only one of the two axes: if the scanner counted it
+here, don't mark it down again in Precision. The pattern allows an adverb
+before the verb ("the path quietly swallows"). The hit is for the verb;
+"quietly" and "simply" are separate tells, scored under Vocabulary and
+Tone, so the scanner counts each word once.
 
 - **10:** Neutral throughout. Claims are supported by facts, not by
   adjectives or beliefs.
@@ -259,7 +265,7 @@ How the doc is laid out.
 - Paragraphs longer than USU's four to six lines (about 100 words). In the
   gold docs, 1% to 3% of paragraphs run that long.
 - Object relative clauses without "that": "the key it wraps", "the names
-  the harness already uses". The scanner counts this sentence pattern
+  the client already uses". The scanner counts this sentence pattern
   here, as "reduced object relative". The gold docs use the form rarely,
   and keep "that" more often than generated docs do (see "Concise and
   compressed").
@@ -270,6 +276,12 @@ that nests one clause in another, or that puts many words between a noun
 and its verb, is the habit: "The lease the node the scheduler picked
 holds expires in 10 s." As on the other measured axes, move the score
 by up to 3 points from what that reading shows, and give a line number.
+Some hits are not object relatives. A complement clause with its "that"
+dropped can match ("Tell the user the request failed"), and so can a
+phrase that opens a sentence ("In the past the system used polling",
+though the scanner skips "the past", "the end", "the way", and similar
+nouns). Take those hits out of the Structure count. Complement clauses
+are graded only under Economy.
 
 - **10:** Numbered sections. Paragraphs of a few sentences carry the
   argument. Lists enumerate sets and steps.

@@ -4,8 +4,8 @@ The thresholds in `../scripts/patterns.json` (`scoring`) were set on
 2026-11-10. The gold set is RFCs and the Kubernetes architecture docs. The
 other sets show where generated prose falls. The patterns and metrics drawn
 from the USU technical writing standards were checked against the same
-sets. The two syntax patterns were added on 2026-11-12 and checked as
-described under "The syntax checks".
+sets. The two patterns from Clark, Martin, and Mahowald were added on
+2026-11-12 and checked as described under "The syntax checks".
 
 ## Corpus
 
@@ -144,13 +144,25 @@ expression:
 - "reduced object relative", in the `syntax` category, which feeds the
   structure index with weight 1: a relative clause with its "that"
   dropped, as in "the key it wraps". About 85 to 90% of its hits were
-  real in a hand check of 32 hits from the RFCs and the internal docs.
+  real in a hand check of 32 hits from the RFCs and the internal docs. It
+  skips nouns that start an adverbial phrase, such as "the way", "the
+  time", and "in the past".
 - "inanimate subject, animate verb", in the `tone` category, with weight
-  2: a code span, a pronoun, or "the" and a noun, followed by a verb for a
-  living thing, as in "`refresh()` swallows the error". The list leaves out
-  verbs that systems docs use by convention, such as "knows", "wants",
+  2: a verb for a living thing, such as "swallows", "bites", or "hammers",
+  after a code span, a pronoun, or a determiner and up to three words.
+  "`refresh()` swallows the error" and "this edge case bites" both count.
+  A subject that names a person, such as "the user", "an attacker", "the
+  operator", or "the caller", doesn't count. The verb list leaves out verbs
+  that systems docs use by convention, such as "knows", "wants",
   "decides", and "watches", because the RFCs and Kubernetes pages use them
-  too.
+  too. It also leaves out "steals" and "lies to", which security sections
+  use for attackers.
+
+The two patterns differ in how much of the subject they read. Letting the
+Tone pattern's subject run to three words added no gold-set hits and 2
+private-set hits, both real. The same change to the relative-clause
+pattern raised its RFC hits from 39 to 564, most of them false, so that
+pattern still reads one word before the clause.
 
 Noun stacks, nouns used as verbs, dependency length, and rare word pairs
 are left to the reviewer. Without a part-of-speech tagger, a noun-stack
@@ -162,8 +174,10 @@ language model.
 The scanner also reports `that_omission_share`, unscored: of the clauses
 where "that" is optional (a complement after "knows" or "ensures", or an
 object relative), the share written without it. The count is in
-`that_clauses`. Human writers drop "that" too, so the share is a hint for
-the reviewer, and it is noisy when a doc has few such clauses.
+`that_clauses`. Both sides use the same rules, so a clause counts once
+whether or not it keeps "that". Human writers drop "that" too, so the
+share is a hint for the reviewer, and it is noisy when a doc has few such
+clauses.
 
 These checks were run on 2026-11-12 over the same RFCs and Kubernetes
 pages, fetched again, and over a second private set: 40 Markdown design
@@ -177,9 +191,9 @@ Per 1,000 words, for docs of 400 words or more:
 | --- | --- | --- | --- |
 | Reduced object relatives, median | 0.06 | 0 | 1.61 |
 | Reduced object relatives, range | 0 to 0.31 | 0 to 1.55 | 0 to 4.47 |
-| Inanimate subject, animate verb, pooled | 0.004 (1 hit) | 0 | 0 |
-| `that_omission_share`, pooled | 19% of 360 clauses | 5 of 8 clauses | 98% of 314 clauses |
-| `that_omission_share`, median of docs with 5 or more such clauses | 23% (9 docs) | No doc has 5 | 100% (26 docs) |
+| Inanimate subject, animate verb, pooled | 0.004 (1 hit) | 0 | 0.01 (2 hits) |
+| `that_omission_share`, pooled | 19% of 334 clauses | 4 of 7 clauses | 98% of 313 clauses |
+| `that_omission_share`, median of docs with 5 or more such clauses | 20% (9 docs) | No doc has 5 | 100% (26 docs) |
 
 Measured subtotals before and after the change:
 
@@ -190,16 +204,20 @@ Measured subtotals before and after the change:
 | Internal docs (40) | 66.2 to 65.0 | 77.1 to 76.1 | 91.2, no change | 31 of 40, by at most 6.3 |
 | `llm-heavy.md` | 0 | 0 | 0 | No hits |
 | `rfc-like.md` | 100 to 98.1 | | | 2 true hits |
-| `compressed.md` | 82.2 to 72.2 | | | New fixture |
+| `compressed.md` | 93.4 to 72.2 | | | New fixture |
+
+The lowest Kubernetes page and the lowest internal doc both score 66.2
+before the change. They are different docs: `self-healing.md` has 259
+words, and the internal doc has about 6,700.
 
 The fixture `compressed.md` is written in the style that the paper
-describes. It avoids the known word list, so before this change it scored
-82. The
-fixture `llm-heavy.md` is written in the older style and has none of these
+describes. It avoids the known word list and has no other Tone hits, so
+before this change it scored 93. The fixture
+`llm-heavy.md` is written in the older style and has none of these
 constructions.
 
-The internal docs keep "that" in 5 of 314 clauses where it is optional.
-The RFCs keep it in 291 of 360. Part of that gap may come from this skill:
+The internal docs keep "that" in 5 of 313 clauses where it is optional.
+The RFCs keep it in 270 of 334. Part of that gap may come from this skill:
 until 2026-11-12 the rubric passed on USU's rule that "that" is a filler
 word, and these docs may have been revised after a grade from it. Read the
 internal column as an upper bound on the habit, not as a clean measure of

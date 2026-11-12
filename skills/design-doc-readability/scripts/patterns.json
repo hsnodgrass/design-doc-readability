@@ -574,7 +574,7 @@
       },
       {
         "label": "inanimate subject, animate verb",
-        "re": "\\b(?:x|it|this|that|(?:the|a|an|each|every|its)\\s+[a-z][\\w-]*)\\s+(?:quietly\\s+|silently\\s+|happily\\s+|just\\s+|simply\\s+|still\\s+)?(?:(?:doesn'?t|does not|won'?t|never|can'?t|cannot)\\s+(?:swallow|bite|eat|care|forget|forgive|complain|hope|insist|mind|lie)\\b|(?:swallows|swallowed|bites|eats|ate|chews|chokes|choked|promises|forgets|forgot|hopes|cares|complains|insists|fights|forgives|hates|loves|worries|pretends|shrugs|hammers|steals|sulks|panics|begs|gossips|lies to|lied to)\\b)",
+        "re": "\\b(?:x|it|this|that|(?:the|a|an|each|every|its|this|that)\\s+(?!(?:users?|attackers?|adversar(?:y|ies)|operators?|admins?|administrators?|developers?|customers?|person|people|teams?|humans?|engineers?|reviewers?|callers?|maintainers?|owners?|authors?|readers?|someone|anyone|everyone|on-call)\\b)[a-z][\\w-]*(?:\\s+(?!(?:users?|attackers?|adversar(?:y|ies)|operators?|admins?|administrators?|developers?|customers?|person|people|teams?|humans?|engineers?|reviewers?|callers?|maintainers?|owners?|authors?|readers?|someone|anyone|everyone|on-call)\\b)[a-z][\\w-]*){0,2})\\s+(?:quietly\\s+|silently\\s+|happily\\s+|just\\s+|simply\\s+|still\\s+)?(?:(?:doesn'?t|does not|won'?t|never|can'?t|cannot)\\s+(?:swallow|bite|eat|care|forget|forgive|complain|hope|insist|mind)\\b|(?:swallows|swallowed|bites|eats|ate|chews|chokes|choked|promises|forgets|forgot|hopes|cares|complains|insists|fights|forgives|hates|loves|worries|pretends|shrugs|hammers|sulks|panics|begs|gossips)\\b)",
         "w": 2
       }
     ],
@@ -665,7 +665,7 @@
     "syntax": [
       {
         "label": "reduced object relative",
-        "re": "\\b(?:the|a|an|every|each|any)\\s+(?!(?:time|times|moment|way|day|point|extent|place|case|reason|same|following|first|last|only|one)\\b)[a-z]{3,}\\s+(?:(?:the|this|our|your|its)\\s+(?:[a-z]+\\s+)?[a-z]+|we|you|they|it)\\s+(?:never\\s+|already\\s+|just\\s+|still\\s+)?(?:[a-z]+(?:ed|es|s)|wrote|built|chose|saw|knew|made|took|gave|ran|left|kept|held|sent|got)\\b(?!\\s+(?:to|that)\\b)",
+        "re": "\\b(?:the|a|an|every|each|any)\\s+(?!(?:time|times|moment|way|day|point|extent|place|case|reason|same|following|first|last|only|one|past|end|future|meantime|interim|beginning|long|short)\\b)[a-z]{3,}\\s+(?:(?:the|this|our|your|its)\\s+(?:[a-z]+\\s+)?[a-z]+|we|you|they|it)\\s+(?:never\\s+|already\\s+|just\\s+|still\\s+)?(?:[a-z]+(?:ed|es|s)|wrote|built|chose|saw|knew|made|took|gave|ran|left|kept|held|sent|got)\\b(?!\\s+(?:to|that)\\b)",
         "w": 1
       }
     ]

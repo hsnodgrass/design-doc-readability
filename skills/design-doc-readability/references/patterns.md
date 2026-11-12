@@ -76,7 +76,8 @@ Not matched by the scanner, so watch for these while reading:
 | Inanimate subject, animate verb | "`is_file()` swallows the error and returns False." | "`is_file()` catches the error and returns False." |
 
 The scanner's list for the last row holds only chat-register verbs, such
-as "swallows", "bites", and "eats". A sentence that it counts here is not
+as "swallows", "bites", and "eats". It skips subjects that name people,
+such as "the user" or "an attacker". A sentence that it counts here is not
 counted again under Precision.
 
 ## Typography

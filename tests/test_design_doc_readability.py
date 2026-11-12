@@ -108,24 +108,35 @@ class ScanTest(unittest.TestCase):
     def test_reduced_object_relative(self):
         for text in ("Rotate the key it wraps.",
                      "Keep the names the client already uses.",
-                     "Check every token the issuer signed."):
+                     "Check every token the issuer signed.",
+                     "The server shows the page it has loaded."):
             r = scan(self.write("orc.md", f"# T\n\n{text}\n"))
             self.assertIn("reduced object relative", patterns(r, "syntax"), text)
         for text in ("Rotate the key that it wraps.",
                      "Refresh every time it sends a request.",
-                     "The key it uses to sign is in the store."):
+                     "The key it uses to sign is in the store.",
+                     "In the past the system used polling.",
+                     "In the end the client retries."):
             r = scan(self.write("orc.md", f"# T\n\n{text}\n"))
             self.assertEqual(r["hits"]["syntax"], [], text)
 
     def test_inanimate_subject_animate_verb(self):
         for text in ("The call `refresh()` swallows the error.",
                      "The cache doesn't care which caller asked.",
-                     "The check bites during deploys."):
+                     "The check bites during deploys.",
+                     "The current refresh path quietly swallows expiry errors.",
+                     "In practice this edge case bites.",
+                     "That approach hammers the issuer."):
             r = scan(self.write("anim.md", f"# T\n\n{text}\n"))
             self.assertIn("inanimate subject, animate verb", patterns(r, "tone"), text)
         for text in ("The client knows the key.",
                      "An endpoint that wishes to close sends a frame.",
-                     "The controller watches the API server."):
+                     "The controller watches the API server.",
+                     "An attacker steals the session cookie.",
+                     "The user forgets to rotate the key.",
+                     "The operator hates the dashboard.",
+                     "The on-call engineer forgets the runbook.",
+                     "The caller forgets to close the stream."):
             r = scan(self.write("anim.md", f"# T\n\n{text}\n"))
             self.assertNotIn("inanimate subject, animate verb", patterns(r, "tone"), text)
 
@@ -141,14 +152,30 @@ class ScanTest(unittest.TestCase):
         self.assertEqual(r["metrics"]["that_clauses"], 0)
         self.assertIsNone(r["metrics"]["that_omission_share"])
 
+    def test_that_clauses_are_counted_once(self):
+        # A reduced relative inside a complement is one clause, not two.
+        r = scan(self.write("one.md", "# T\n\nThe server shows the page it has loaded.\n"))
+        self.assertEqual(r["metrics"]["that_clauses"], 1)
+        # The subject doesn't reach across "and" to a second verb phrase.
+        r = scan(self.write("and.md", "# T\n\nWe know the answer and will ship it.\n"))
+        self.assertEqual(r["metrics"]["that_clauses"], 0)
+        # The overt relative skips the same nouns as the reduced one.
+        r = scan(self.write("way.md", "# T\n\nThis is the way that it works.\n"))
+        self.assertEqual(r["metrics"]["that_clauses"], 0)
+
     def test_compressed_fixture(self):
         r = scan(FIXTURES / "compressed.md")
         gold = scan(FIXTURES / "rfc-like.md")
-        self.assertIn("reduced object relative", patterns(r, "syntax"))
-        self.assertIn("inanimate subject, animate verb", patterns(r, "tone"))
-        self.assertGreaterEqual(r["metrics"]["that_omission_share"], 0.8)
+        syntax = {row["pattern"]: row["count"] for row in r["hits"]["syntax"]}
+        tone = {row["pattern"]: row["count"] for row in r["hits"]["tone"]}
+        self.assertEqual(syntax, {"reduced object relative": 4})
+        # The new pattern is the fixture's only Tone hit, so the low Tone
+        # score comes from it alone.
+        self.assertEqual(tone, {"inanimate subject, animate verb": 7})
+        self.assertEqual(r["mechanical_scores"]["tone"], 0)
+        self.assertEqual(r["metrics"]["that_clauses"], 7)
+        self.assertEqual(r["metrics"]["that_omission_share"], 1.0)
         self.assertLess(r["mechanical_scores"]["structure"], gold["mechanical_scores"]["structure"])
-        self.assertLess(r["mechanical_scores"]["tone"], 5)
         self.assertLess(r["mechanical_subtotal"], gold["mechanical_subtotal"] - 15)
 
     def test_undefined_acronyms(self):

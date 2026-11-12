@@ -53,21 +53,29 @@ PASSIVE = re.compile(
 # Clauses where "that" is optional, for that_omission_share. A complement
 # clause after a verb such as "knows" or "ensures", with or without "that",
 # and an object relative with "that" or "which". The object relative without
-# it is the "reduced object relative" pattern in the syntax category.
+# it is the "reduced object relative" pattern in the syntax category, which
+# RELATIVE_THAT mirrors, so that both sides count the same clauses.
+REDUCED_RELATIVE = ("syntax", "reduced object relative")
 _COMP_VERB = (r"\b(?:know|knew|knows|ensure|ensures|ensured|mean|means|meant|sure|assume|assumes|"
               r"assumed|believe|believes|think|thinks|guarantee|guarantees|show|shows|showed|says|"
               r"said|confirm|confirms|verify|verifies|note|notes|claim|claims|expect|expects|"
               r"requires|imply|implies|indicate|indicates)")
-_CLAUSE_SUBJECT = r"(?:the|a|an|this|each|every|it|we|they|you|he|she|no|all|its|our|their)(?:\s+[a-z][\w-]*){0,3}?"
+# The subject stops before a pronoun, "that", or a conjunction, so that it
+# doesn't absorb a reduced relative ("the page it has loaded") or reach
+# across "and" into a second verb phrase.
+_CLAUSE_SUBJECT = (r"(?:the|a|an|this|each|every|it|we|they|you|he|she|no|all|its|our|their)"
+                   r"(?:\s+(?!(?:and|or|but|it|we|they|you|he|she|that|which|who)\b)[a-z][\w-]*){0,3}?")
 _AUX = (r"(?:is|are|was|were|has|have|had|will|would|can|could|must|should|may|might|does|did|"
         r"doesn['’]t|isn['’]t|won['’]t)\b")
 COMPLEMENT_BARE = re.compile(rf"{_COMP_VERB}\s+{_CLAUSE_SUBJECT}\s+{_AUX}", re.I)
 COMPLEMENT_THAT = re.compile(rf"{_COMP_VERB}\s+that\s+{_CLAUSE_SUBJECT}\s+{_AUX}", re.I)
 RELATIVE_THAT = re.compile(
-    r"\b(?:the|a|an|every|each|any)\s+[a-z]{3,}\s+(?:that|which)\s+"
+    r"\b(?:the|a|an|every|each|any)\s+(?!(?:time|times|moment|way|day|point|extent|place|case|"
+    r"reason|same|following|first|last|only|one|past|end|future|meantime|interim|beginning|long|"
+    r"short)\b)[a-z]{3,}\s+(?:that|which)\s+"
     r"(?:(?:the|this|our|your|its)\s+(?:[a-z]+\s+)?[a-z]+|we|you|they|it)\s+"
     r"(?:never\s+|already\s+|just\s+|still\s+)?(?:[a-z]+(?:ed|es|s)|wrote|built|chose|saw|knew|"
-    r"made|took|gave|ran|left|kept|held|sent|got)\b", re.I)
+    r"made|took|gave|ran|left|kept|held|sent|got)\b(?!\s+(?:to|that)\b)", re.I)
 CONTRACTION = re.compile(r"\b\w+(n['’]t|['’]re|['’]ll|['’]ve|['’]d)\b|\b(it|that|there|here|what|who|let)['’]s\b", re.I)
 FIRST_PERSON = re.compile(r"\b(I|we|us|our|my)\b", re.I)
 SECOND_PERSON = re.compile(r"\b(you|your|yours)\b", re.I)
@@ -288,8 +296,9 @@ def scan(path, patterns_path, max_hits):
     # writers drop it too, and the share is noisy when a doc has few clauses.
     that_kept = sum(len(COMPLEMENT_THAT.findall(t)) + len(RELATIVE_THAT.findall(t))
                     for _, t, _ in units)
+    cat, label = REDUCED_RELATIVE
     that_dropped = (sum(len(COMPLEMENT_BARE.findall(t)) for _, t, _ in units)
-                    + len(hits.get("syntax", {}).get("reduced object relative", {"lines": []})["lines"]))
+                    + len(hits.get(cat, {}).get(label, {"lines": []})["lines"]))
     that_clauses = that_kept + that_dropped
 
     pos = {k: 0 for k in positive}
